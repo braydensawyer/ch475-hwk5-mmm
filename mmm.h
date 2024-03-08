@@ -1,16 +1,27 @@
 #ifndef MMM_H_
 #define MMM_H_
 
-// shared globals
-extern unsigned int mode;
-extern unsigned int size, num_threads;
-extern double **A, **B, **SEQ_MATRIX, **PAR_MATRIX;
+// globals (anything here would be shared with all threads) */
+// I would declare the pointers to the matrices here (i.e., extern double **A, **B, **C),
+// as well as the size of the matrices, etc.
+extern double **input1;
+extern double **input2;
+extern double **output;
+extern double **tempoutput;
+extern int size;
+
+struct thread_args {
+    double start_row; 
+    double end_row; 
+};
 
 void mmm_init();
 void mmm_reset(double **);
 void mmm_freeup();
 void mmm_seq();
-void* mmm_par(void *);
+void *mmm_par(void *args);
 double mmm_verify();
+void printMatrix(double **matrix);
+void copyOutput();
 
 #endif /* MMM_H_ */
