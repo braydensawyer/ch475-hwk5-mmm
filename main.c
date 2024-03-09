@@ -51,9 +51,9 @@ int main(int argc, char *argv[]) {
 			sscanf(argv[3], "%d", &size);
 			sscanf(argv[2], "%d", &numThreads);
 			mmm_init();
-			int rows_per_thread = size / numThreads;
-			int start_row;
-			int end_row;
+			int rows = size / numThreads;
+			int startRow;
+			int endRow;
 			printf("========\n");
 			printf("mode: parallel\n");
 			printf("thread count: %d\n", numThreads);
@@ -76,23 +76,23 @@ int main(int argc, char *argv[]) {
 			//find average of 3 parallel mode runs
 			for(int i = 0; i < 3; i++){
 				mmm_reset(output);
-				start_row = 0; 
-				end_row = rows_per_thread - 1; 
+				startRow = 0; 
+				endRow = rows - 1; 
 				clockstart = rtclock();
 				int numThreads;
 				sscanf(argv[2], "%d", &numThreads);
 
 				// Calculate rows per thread
-				int rows_per_thread = size / numThreads;
+				int rows = size / numThreads;
 				//create thread array and thread_args array
 				pthread_t *threads = (pthread_t*) malloc(numThreads * sizeof(pthread_t));
-				struct thread_args *tArgs = (struct thread_args*) malloc(numThreads * sizeof(struct thread_args));
+				struct threadArgs *tArgs = (struct threadArgs*) malloc(numThreads * sizeof(struct threadArgs));
 				//create threads and their arguments
 				for (int i = 0; i < numThreads; i++) {
-					start_row = i * rows_per_thread;
-					end_row = (i == (numThreads - 1)) ? (size - 1) : (start_row + rows_per_thread - 1);
-					tArgs[i].start_row = start_row;
-					tArgs[i].end_row = end_row;
+					startRow = i * rows;
+					endRow = (i == (numThreads - 1)) ? (size - 1) : (startRow + rows - 1);
+					tArgs[i].startRow = startRow;
+					tArgs[i].endRow = endRow;
 					pthread_create(&threads[i], NULL, mmm_par, &tArgs[i]);
 				}
 				//join threads
@@ -119,15 +119,6 @@ int main(int argc, char *argv[]) {
 	else{
 		printf("Usage: ./mmmSol <mode> [num threads] <size>\n");
 	}
-	
-	// clockstart = rtclock(); // start clocking
-
-	// // start: stuff I want to clock
-
-	// // end: stuff I want to clock
-
-	// clockend = rtclock(); // stop clocking
-	// printf("Time taken: %.6f sec\n", (clockend - clockstart));
 
 	return 0;
 }

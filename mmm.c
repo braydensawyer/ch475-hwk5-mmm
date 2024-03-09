@@ -48,9 +48,7 @@ void mmm_init() {
 	}
 
 	// TODO
-	srand((unsigned)time(NULL));	// seed the random number generator
- 	// initialize A and B with random values between 0 and 99
-	// initialize SEQ_MATRIX and PAR_MATRIX with 0s
+	srand((unsigned)time(NULL));
 
 }
 
@@ -120,10 +118,10 @@ void mmm_seq() {
  */
 void *mmm_par(void *args) {
 	// TODO - code to perform parallel MMM
-	struct thread_args *t_args = (struct thread_args *) args;
-	double start_row = t_args->start_row;
-    double end_row = t_args->end_row;
-	for (int i = start_row; i <= end_row; i++) {
+	struct threadArgs *tArgs = (struct threadArgs *) args;
+	double startRow = tArgs->startRow;
+    double endRow = tArgs->endRow;
+	for (int i = startRow; i <= endRow; i++) {
         for (int j = 0; j < size; j++) {
             for (int k = 0; k < size; k++) {
                 output[i][j] += input1[i][k] * input2[k][j];
